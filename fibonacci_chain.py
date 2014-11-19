@@ -3,20 +3,39 @@
 Created on Mon Nov 17 16:38:59 2014
 
 @author: nicolas
+
+At short times the Fibonacci spring chain behaves as a periodic spin chain,
+whose spings have a stiffness equal to the harmonic mean of the Fibonacci sprins stiffness.
+TODO: behaviour at large times? Is there energy transfer to the higher modes in the Fibonacci case?
 """
 
 import math
 import matplotlib.pyplot as plt
-Ntime = 600
-L = 89-1
+
+#compute Fibonacci numbers
+def fib(n):
+    a, b = 0, 1
+    for i in range(n):
+        a, b = b, a + b
+    return a
+
+# total time of the simulation
+Ntime = 6000
+n = 11
+# length of the spring chain
+L = fib(n)-1
+# stength of the anharmonicity
 alpha = 0.8
+# timestep
 dt = 0.2
 # strenght of the quasiperiodic addition to the stiffness
 delta = 5.
-
+# mean stiffness
+#meank = 1 + delta*fib(n-1)/fib(n)
+meank = (1.+delta)/(1.+delta*fib(n-2)/fib(n))
 # force from harmonic potential
 def HARMONIC(u,n):
-    return u[n+1]+u[n-1]-2.*u[n]
+    return meank*(u[n+1]+u[n-1]-2.*u[n])
 
 # force from anharmonic (Fermi Pasta Ulam) potential 
 def FPU(u,n):
@@ -35,34 +54,48 @@ def FT(e,k):
     return sum([e[n]*math.sin(n*k*math.pi/L) for n in range(1,L)])/math.sqrt(L/2.)
     
 #initial condition for the position u and velocity v
-u = [0]+[math.sin(n*math.pi/L)+0.5*math.sin(2*n*math.pi/L)+0.25*math.sin(3*n*math.pi/L) for n in range(1,L)]+[0]
-#u=[0]+[1.-2./L*abs(L/2.-n) for n in range(1,L)]+[0]
+u = [0]+[math.sin(i*math.pi/L)+0.5*math.sin(2*i*math.pi/L)+0.25*math.sin(3*i*math.pi/L) for i in range(1,L)]+[0]
+#u=[0]+[1.-2./L*abs(L/2.-i) for i in range(1,L)]+[0]
 # x0 = L/4 +4
 # x1 = L+1 - x0
 # v0 = 0.02
-v = [0. for n in range(L+1)]
+v = [0. for i in range(L+1)]
 
 # looking at the first Nmodes fourier energy modes
 Nmodes = 5
-modes = [[] for n in range(Nmodes)]
+modes = [[] for i in range(Nmodes)]
 
 # vector of displacement and velocity
-ut = []
-vt = []
+ut = [u]
+vt = [v]
+# control system (harmonic potential)
+utc = [u]
+vtc = [v]
+uc = u[:]
+vc = v[:]
 
 #dynamics with fixed boundary conditions: u[0] = u[L-1] = 0. Using Euler integrator
 for itime in range(Ntime):
+    olduc = uc[:]
+    oldvc = vc[:]
+    vc = [0]+[oldvc[i]+dt*HARMONIC(olduc,i) for i in range(1,L)]+[0]
+    uc = [0]+[olduc[i]+dt*vc[i] for i in range(1,L)]+[0]
+        
+    utc.append(uc)
+    vtc.append(vc)
+    
     oldu = u[:]
     oldv = v[:]
-    v = [0]+[oldv[n]+dt*FIBO(oldu,n) for n in range(1,L)]+[0]
-    u = [0]+[oldu[n]+dt*v[n] for n in range(1,L)]+[0]
+    v = [0]+[oldv[i]+dt*FIBO(oldu,i) for i in range(1,L)]+[0]
+    u = [0]+[oldu[i]+dt*v[i] for i in range(1,L)]+[0]
     
+    ut.append(u)
+    vt.append(v)
+#    
 #    for k in range(Nmodes):
 #        en = FT(v,k)**2/2.+2.*(math.sin(k*math.pi/(2*L)))**2*FT(u,k)**2
 #        modes[k].append(en)
     
-    ut.append(u)
-    vt.append(v)
 
 def en(k):
     plt.title('The Fibonacci chain chain')
@@ -76,12 +109,21 @@ def en(k):
     plt.show()
 
 r = range(L+1)
-def PLOT(t):
-    plt.title('The Fibonacci chain at time ' + str(t))
+def PLOT(timeit):
+    plt.title('The Fibonacci chain at time ' + str(round(dt*timeit,2)))
     plt.xlabel('position')
     plt.ylabel('displacement')
     plt.axis([0,L+1,-2.,2.])
-    plt.plot(r,ut[int(t/dt)])
+    plt.plot(r,utc[timeit])
+    plt.show()
+    
+def plot_c(timeit):
+    plt.title('The Fibonacci and harmonic chains at time ' + str(round(dt*timeit,2)))
+    plt.xlabel('position')
+    plt.ylabel('displacement')
+    plt.axis([0,L+1,-2.,2.])
+    plt.plot(r,ut[timeit])
+    plt.plot(r,utc[timeit])
     plt.show()
 
 def record(timeit):
@@ -91,6 +133,17 @@ def record(timeit):
     plt.axis([0,L+1,-2.,2.])
     plt.plot(r,ut[timeit])
     plt.savefig('data/fibo_realspace_'+str(timeit)+'.png')
+    # clear plot
+    plt.clf()
+    
+def record_control(timeit,skip):
+    plt.title('The Fibonacci and harmonic chains at time ' + str(round(skip*dt*timeit,2)))
+    plt.xlabel('position')
+    plt.ylabel('displacement')
+    plt.axis([0,L+1,-2.,2.])
+    plt.plot(r,ut[skip*timeit])
+    plt.plot(r,utc[skip*timeit])
+    plt.savefig('data/fibo_harmo_'+str(timeit)+'.png')
     # clear plot
     plt.clf()
 
