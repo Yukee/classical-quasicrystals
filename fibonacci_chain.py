@@ -20,19 +20,21 @@ def fib(n):
     return a
 
 # total time of the simulation
-Ntime = 6000
+Ntime = 2000
 n = 11
 # length of the spring chain
 L = fib(n)-1
 # stength of the anharmonicity
 alpha = 0.8
 # timestep
-dt = 0.2
+dt = 0.02
 # strenght of the quasiperiodic addition to the stiffness
 delta = 5.
-# mean stiffness
-#meank = 1 + delta*fib(n-1)/fib(n)
+# harmonic mean stiffness
 meank = (1.+delta)/(1.+delta*fib(n-2)/fib(n))
+# geometric mean stiffness
+meankg = 1. + delta*fib(n-1)/fib(n)
+
 # force from harmonic potential
 def HARMONIC(u,n):
     return meank*(u[n+1]+u[n-1]-2.*u[n])
@@ -47,7 +49,10 @@ om = 2./(1.+math.sqrt(5))
 # force from harmonic potential with Fibonacci stiffness
 def FIBO(u,n):
     fibn = int(om*(n+1)) - int(om*n) # an integer to takes values 0 or 1 occordingly to Fibonacci sequence
-    return (1+delta*fibn)*(u[n+1]+u[n-1]-2.*u[n])
+    fibnm = int(om*n) - int(om*(n-1))
+    cn = 1.+delta*fibn
+    cnm = 1.+delta*fibnm
+    return cn*u[n+1]+cnm*u[n-1]-(cn+cnm)*u[n]
 
 # Fourier transform of a function e, on the chain of size L
 def FT(e,k):
@@ -61,9 +66,10 @@ u = [0]+[math.sin(i*math.pi/L)+0.5*math.sin(2*i*math.pi/L)+0.25*math.sin(3*i*mat
 # v0 = 0.02
 v = [0. for i in range(L+1)]
 
-# looking at the first Nmodes fourier energy modes
+# looking at the first Nmodes Fourier energy modes
 Nmodes = 5
-modes = [[] for i in range(Nmodes)]
+modc = [[] for i in range(Nmodes)]
+mod = [[] for i in range(Nmodes)]
 
 # vector of displacement and velocity
 ut = [u]
@@ -84,6 +90,11 @@ for itime in range(Ntime):
     utc.append(uc)
     vtc.append(vc)
     
+    # first Nmodes Fourier modes, harmonic
+    for k in range(Nmodes):
+        enc = FT(vc,k)**2/2.+2.*meank*(math.sin(k*math.pi/(2*L)))**2*FT(uc,k)**2
+        modc[k].append(enc)
+    
     oldu = u[:]
     oldv = v[:]
     v = [0]+[oldv[i]+dt*FIBO(oldu,i) for i in range(1,L)]+[0]
@@ -91,21 +102,25 @@ for itime in range(Ntime):
     
     ut.append(u)
     vt.append(v)
-#    
-#    for k in range(Nmodes):
-#        en = FT(v,k)**2/2.+2.*(math.sin(k*math.pi/(2*L)))**2*FT(u,k)**2
-#        modes[k].append(en)
+    
+    # first Nmodes Fourier modes, Fibonacci    
+    for k in range(Nmodes):
+        en = FT(v,k)**2/2.+2.*meankg*(math.sin(k*math.pi/(2*L)))**2*FT(u,k)**2
+        mod[k].append(en)
     
 
-def en(k):
-    plt.title('The Fibonacci chain chain')
+def en():
+    plt.title('Power spectrum of the Fibonacci and harmonic chains')
     plt.xlabel('time')
-    plt.ylabel('energy of mode ' + str(k))
+    plt.ylabel('energy of modes ' + str(0) + ' to ' + str(Nmodes-1))
     time = [dt*itime for itime in range(Ntime)]
     #exact = [L*(L*math.sin(math.pi/(2*L)))**2 for itime in range(Ntime)]
     #plt.plot(time,exact,'b-')
-    plt.plot(time,modes[k],'r-')
-    plt.axis([0,Ntime*dt,min(modes[k])-0.2,max(modes[k])+0.2])#,75.,82.])
+    for k in range(Nmodes): plt.plot(time,modc[k],'r-')
+    for k in range(Nmodes): plt.plot(time,mod[k],'b-')
+    modsum = [sum(sublist) for sublist in zip(mod[0],mod[1],mod[2],mod[3],mod[4])]
+    plt.plot(time,modsum,'g-')
+    plt.axis([0,Ntime*dt,min(modc[1])-0.2,max(modc[1])+0.2])#,75.,82.])
     plt.show()
 
 r = range(L+1)
@@ -126,7 +141,7 @@ def plot_c(timeit):
     plt.plot(r,utc[timeit])
     plt.show()
 
-def record(timeit):
+def record_FIBO(timeit):
     plt.title('The Fibonacci chain at time ' + str(round(dt*timeit,2)))
     plt.xlabel('position')
     plt.ylabel('displacement')
