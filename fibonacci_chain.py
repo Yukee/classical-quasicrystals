@@ -20,7 +20,7 @@ def fib(n):
     return a
 
 # total time of the simulation
-Ntime = 2000
+Ntime = 6000
 n = 11
 # length of the spring chain
 L = fib(n)-1
@@ -59,7 +59,7 @@ def FT(e,k):
     return sum([e[n]*math.sin(n*k*math.pi/L) for n in range(1,L)])/math.sqrt(L/2.)
     
 #initial condition for the position u and velocity v
-u = [0]+[math.sin(i*math.pi/L)+0.5*math.sin(2*i*math.pi/L)+0.25*math.sin(3*i*math.pi/L) for i in range(1,L)]+[0]
+u = [0]+[math.sin(i*math.pi/L)for i in range(1,L)]+[0]
 #u=[0]+[1.-2./L*abs(L/2.-i) for i in range(1,L)]+[0]
 # x0 = L/4 +4
 # x1 = L+1 - x0
@@ -91,9 +91,9 @@ for itime in range(Ntime):
     vtc.append(vc)
     
     # first Nmodes Fourier modes, harmonic
-    for k in range(Nmodes):
-        enc = FT(vc,k)**2/2.+2.*meank*(math.sin(k*math.pi/(2*L)))**2*FT(uc,k)**2
-        modc[k].append(enc)
+#    for k in range(Nmodes):
+#        enc = FT(vc,k)**2/2.+2.*meank*(math.sin(k*math.pi/(2*L)))**2*FT(uc,k)**2
+#        modc[k].append(enc)
     
     oldu = u[:]
     oldv = v[:]
@@ -104,9 +104,9 @@ for itime in range(Ntime):
     vt.append(v)
     
     # first Nmodes Fourier modes, Fibonacci    
-    for k in range(Nmodes):
-        en = FT(v,k)**2/2.+2.*meankg*(math.sin(k*math.pi/(2*L)))**2*FT(u,k)**2
-        mod[k].append(en)
+#    for k in range(Nmodes):
+#        en = FT(v,k)**2/2.+2.*meankg*(math.sin(k*math.pi/(2*L)))**2*FT(u,k)**2
+#        mod[k].append(en)
     
 
 def en():
@@ -156,7 +156,7 @@ def record_control(timeit,skip):
     plt.xlabel('position')
     plt.ylabel('displacement')
     plt.axis([0,L+1,-2.,2.])
-    plt.plot(r,ut[skip*timeit])
+    #plt.plot(r,ut[skip*timeit])
     plt.plot(r,utc[skip*timeit])
     plt.savefig('data/fibo_harmo_'+str(timeit)+'.png')
     # clear plot
