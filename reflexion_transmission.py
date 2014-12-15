@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon Nov 17 16:38:59 2014
+Created on Mon Dec 15 13:31:11 2014
 
 @author: nicolas
 
 At short times the Fibonacci spring chain behaves as a periodic spin chain,
 whose spings have a stiffness equal to the harmonic mean of the Fibonacci sprins stiffness.
-TODO: behaviour at large times? Is there energy transfer to the higher modes in the Fibonacci case?
+
 """
 
 import math
@@ -59,11 +59,14 @@ def FT(e,k):
     return sum([e[n]*math.sin(n*k*math.pi/L) for n in range(1,L)])/math.sqrt(L/2.)
     
 #initial condition for the position u and velocity v
-u = [0]+[math.sin(i*math.pi/L)for i in range(1,L)]+[0]
+#u = [0]+[math.sin(i*math.pi/L)for i in range(1,L)]+[0]
+freq = 0.2
+u = [0.]+[0. for i in range(1,L)]+[0.]
 #u=[0]+[1.-2./L*abs(L/2.-i) for i in range(1,L)]+[0]
 # x0 = L/4 +4
 # x1 = L+1 - x0
 # v0 = 0.02
+vel = math.sqrt(meank)
 v = [0. for i in range(L+1)]
 
 # looking at the first Nmodes Fourier energy modes
@@ -84,8 +87,9 @@ vc = v[:]
 for itime in range(Ntime):
     olduc = uc[:]
     oldvc = vc[:]
-    vc = [0]+[oldvc[i]+dt*HARMONIC(olduc,i) for i in range(1,L)]+[0]
-    uc = [0]+[olduc[i]+dt*vc[i] for i in range(1,L)]+[0]
+    vc = [2*math.pi*freq*math.cos(2*math.pi*freq*itime*dt)]+[oldvc[i]+dt*HARMONIC(olduc,i) for i in range(1,L)]+[0]
+    uc = [math.sin(2*math.pi*freq*itime*dt)]+[olduc[i]+dt*vc[i] for i in range(1,L)]+[0]
+#    print(uc[0])
         
     utc.append(uc)
     vtc.append(vc)
@@ -158,7 +162,7 @@ def record_control(timeit,skip):
     plt.axis([0,L+1,-2.,2.])
     plt.plot(r,ut[skip*timeit])
     plt.plot(r,utc[skip*timeit])
-    plt.savefig('data/fibo_harmo_'+str(timeit)+'.png')
+    plt.savefig('data/propagation_test'+str(timeit)+'.png')
     # clear plot
     plt.clf()
 
