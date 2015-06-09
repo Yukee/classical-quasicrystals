@@ -10,10 +10,17 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
+<<<<<<< HEAD
 NotebookDataLength[     23354,        575]
 NotebookOptionsPosition[     22470,        541]
 NotebookOutlinePosition[     22804,        556]
 CellTagsIndexPosition[     22761,        553]
+=======
+NotebookDataLength[     22369,        568]
+NotebookOptionsPosition[     21707,        542]
+NotebookOutlinePosition[     22043,        557]
+CellTagsIndexPosition[     22000,        554]
+>>>>>>> 90f5a3ab8afb386f1992fddf9561f36a8ee4a4a1
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -79,6 +86,22 @@ Cell[BoxData[
           RowBox[{"p", "+", "q"}]}], "]"}], "\[GreaterEqual]", "p"}], ",", 
        "kw", ",", "ks"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
    RowBox[{"(*", " ", 
+    RowBox[{"harmonic", " ", "mean", " ", "stiffness"}], " ", "*)"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"meank", "=", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"1", "+", "delta"}], ")"}], "/", 
+      RowBox[{"(", 
+       RowBox[{"1", "+", 
+        RowBox[{"delta", "*", 
+         RowBox[{
+          RowBox[{"Fibonacci", "[", 
+           RowBox[{"n", "-", "2"}], "]"}], "/", 
+          RowBox[{"Fibonacci", "[", "n", "]"}]}]}]}], ")"}]}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{"(*", " ", 
     RowBox[{"\[CapitalOmega]", " ", "matrix"}], " ", "*)"}], 
    "\[IndentingNewLine]", 
    RowBox[{
@@ -137,6 +160,61 @@ Cell[BoxData[
     RowBox[{"\[CapitalOmega]2", "=", 
      RowBox[{"subdiag\[CapitalOmega]2", "+", 
       RowBox[{"Transpose", "[", "subdiag\[CapitalOmega]2", "]"}], "+", 
+      "diag\[CapitalOmega]2"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{"(*", " ", 
+    RowBox[{"periodic", " ", "\[CapitalOmega]", " ", "matrix"}], " ", "*)"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"subdiag", "=", 
+     RowBox[{"Table", "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"i", ",", 
+          RowBox[{"i", "+", "1"}]}], "}"}], "\[Rule]", 
+        RowBox[{"-", "meank"}]}], ",", 
+       RowBox[{"{", 
+        RowBox[{"i", ",", "1", ",", 
+         RowBox[{"L", "-", "1"}]}], "}"}]}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"diag", "=", 
+     RowBox[{"Table", "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"i", ",", "i"}], "}"}], "\[Rule]", 
+        RowBox[{"2", " ", "meank"}]}], ",", 
+       RowBox[{"{", 
+        RowBox[{"i", ",", "2", ",", "L"}], "}"}]}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"PrependTo", "[", 
+     RowBox[{"diag", ",", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1", ",", "1"}], "}"}], "\[Rule]", "meank"}]}], "]"}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"diag\[CapitalOmega]2", "=", 
+     RowBox[{"Normal", "[", 
+      RowBox[{"SparseArray", "[", 
+       RowBox[{"diag", ",", 
+        RowBox[{"{", 
+         RowBox[{"L", ",", "L"}], "}"}]}], "]"}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"subdiag\[CapitalOmega]2", "=", 
+     RowBox[{"Normal", "[", 
+      RowBox[{"SparseArray", "[", 
+       RowBox[{"subdiag", ",", 
+        RowBox[{"{", 
+         RowBox[{"L", ",", "L"}], "}"}]}], "]"}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"\[CapitalOmega]p2", "=", 
+     RowBox[{"subdiag\[CapitalOmega]2", "+", 
+      RowBox[{"Transpose", "[", "subdiag\[CapitalOmega]2", "]"}], "+", 
       "diag\[CapitalOmega]2"}]}], ";"}]}]}]], "Input",
  CellChangeTimes->{{3.625981976841827*^9, 3.625981983026157*^9}, {
    3.625982084377492*^9, 3.6259821984070673`*^9}, {3.625982229990522*^9, 
@@ -148,28 +226,42 @@ Cell[BoxData[
    3.625999601034926*^9, 3.625999655082347*^9}, {3.625999817712805*^9, 
    3.625999890579364*^9}, {3.62599992156425*^9, 3.6259999335304947`*^9}, 
    3.625999980860647*^9, {3.627636250535138*^9, 3.627636250657825*^9}, {
+<<<<<<< HEAD
    3.642764336358047*^9, 3.642764336500719*^9}, {3.642764372916699*^9, 
    3.6427644667264643`*^9}, {3.642764540295396*^9, 3.642764546214072*^9}, 
    3.642764603493938*^9, {3.6427646719423027`*^9, 3.6427646823253202`*^9}, {
    3.642764825765925*^9, 3.6427648511569347`*^9}, {3.6427648858621492`*^9, 
    3.642764887765732*^9}, {3.642764954325882*^9, 3.642764956389277*^9}}],
+=======
+   3.627664663988325*^9, 3.6276647532201147`*^9}, {3.6276648161841793`*^9, 
+   3.6276648604433203`*^9}}],
+>>>>>>> 90f5a3ab8afb386f1992fddf9561f36a8ee4a4a1
 
-Cell[BoxData[
+Cell[BoxData[{
  RowBox[{
   RowBox[{"eigmod", "=", 
    RowBox[{"Sort", "[", 
     RowBox[{"Sqrt", "[", 
      RowBox[{"Eigenvalues", "[", "\[CapitalOmega]2", "]"}], "]"}], "]"}]}], 
-  ";"}]], "Input",
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"eigmodp", "=", 
+   RowBox[{"Sort", "[", 
+    RowBox[{"Sqrt", "[", 
+     RowBox[{"Eigenvalues", "[", "\[CapitalOmega]p2", "]"}], "]"}], "]"}]}], 
+  ";"}]}], "Input",
  CellChangeTimes->{{3.625995191256486*^9, 3.62599521032939*^9}, {
   3.6259996825133142`*^9, 3.6259996882578907`*^9}, {3.625999777107383*^9, 
-  3.6259997798410273`*^9}, {3.6259998666906157`*^9, 3.625999891825688*^9}}],
+  3.6259997798410273`*^9}, {3.6259998666906157`*^9, 3.625999891825688*^9}, {
+  3.627664867450499*^9, 3.627664894334866*^9}}],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[{
  RowBox[{"ListPlot", "[", 
-  RowBox[{"eigmod", ",", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"eigmod", ",", "eigmodp"}], "}"}], ",", 
    RowBox[{"Joined", "\[Rule]", "False"}], ",", 
    RowBox[{"PlotStyle", "\[Rule]", 
     RowBox[{"PointSize", "[", "0.01", "]"}]}], ",", 
@@ -179,7 +271,8 @@ Cell[BoxData[{
      "\"\<n\>\"", ",", "\"\<\!\(\*SubscriptBox[\(\[Omega]\), \(n\)]\)\>\""}], 
      "}"}]}], ",", 
    RowBox[{
-   "PlotLabel", "\[Rule]", "\"\<Eigenmodes of the Fibonacci chain\>\""}]}], 
+   "PlotLabel", "\[Rule]", 
+    "\"\<Eigenfrequencies of the Fibonacci chain\>\""}]}], 
   "]"}], "\[IndentingNewLine]", 
  RowBox[{"Export", "[", 
   RowBox[{
@@ -189,9 +282,12 @@ Cell[BoxData[{
    3.625999608433968*^9, 3.625999609089161*^9}, {3.625999657794628*^9, 
    3.625999659009557*^9}, 3.6259997842585993`*^9, {3.627636256521516*^9, 
    3.627636321595729*^9}, {3.627636378011784*^9, 3.627636455804171*^9}, {
-   3.62763652444663*^9, 3.62763657471786*^9}}],
+   3.62763652444663*^9, 3.62763657471786*^9}, {3.627664898196454*^9, 
+   3.6276649021060257`*^9}, {3.627664965879825*^9, 3.627664970919681*^9}, {
+   3.6276650055691643`*^9, 3.627665007922611*^9}}],
 
 Cell[BoxData[
+<<<<<<< HEAD
  GraphicsBox[{{}, {{}, 
     {RGBColor[0.368417, 0.506779, 0.709798], PointSize[0.01], 
      AbsoluteThickness[1.6], PointBox[CompressedData["
@@ -248,50 +344,101 @@ iJZ3mMceY301DpYdC1/6K+urMSVn4IeDhayvxuSEY8eKfmN9NaZvzTzwzWnW
 V2P79K/Du4tYX41TP+kZvH+W9SMxa/hVcgMzPxJTtS3VnsX6+B8eKC5o
       "]]}, {}}, {}},
   
+=======
+ GraphicsBox[{{}, {
+    {RGBColor[0.24720000000000014`, 0.24, 0.6], PointSize[0.01], 
+     PointBox[CompressedData["
+1:eJw91H1MU1ccxvHrNkdhFGRikKDENaCAqDBmxQLrU14KtFDa0jIHLJtkHZFJ
+kGwDF+PoRrIXFyED3KbRiiWkqwmJQeYMi9jEWTsF54BYhaxrnWMUhLYg4KyQ
+sXB+nOTm5HO/ef49r1TUqHXPcRz35vL3/71yvOLkOxrFLP+UmP1AsvBRUM2X
+F5l56JZEtLVlWpjXYe2A4cB0n5U5HNaUjp+PpAwwb8TXAREB7uu/M2+CNOTZ
+dPr8MPMW4I+eKdvz95gFsLUMjPrfHWWOweRdj/BGjYN5KzpjNvM8PziZ41A9
+87T7QuoD5gTMWj7YlX7hL+ZEpJqUPGHU38w7scNfur6xZYw5CaN7mktvXPmH
+ORldl9r3f6pzM7+K22M9tvnWCeYULIX3XwmsnGR+DUbD5cInrY+Yd+OtkQ26
+xtgpZiFKrGHfOy56mfcgwG/kjwf7mFOxN/6SUpxH3gvXgotn7yeLYNgUfvK3
+mhnmNHR2VNWVHyOn452yI55IHzkD7hihYyhylvl19AaN6cwdZDGs39Wae+1k
+4PbO/V0hbmY9sMM1EXjmxcesSxD9y7nFJsUc6xKcr3/ZyLP4Wc+E+T1Br7z0
+Baz0TIicz671kbksGAYO/frVAepZsI5Uyt+uop6Nus/mwH+fejZ8m0O23z9K
+PQcaXVv5R59Qz8GJLd7Guq1rWZciazy8Xb6NWS9F9JMR01wC9VwInLEfHkui
+ngsu235vXzL1PPR+ezapNod6Hsz9Dd6jTur5MN4vWHKR9fkYEleul3upy3Bw
+jcw/RNbLEGBavCrxUZeDf0caVbFIXY7DieVCM5krgK7W2x3hDGa9ANWSWamC
+zBXi1jj6jKu9EBU33V1wUVeg/qHn2mmyXoE40fDjxCnqRehcmGkvI+uLsFud
+5qha7UpwBx2Vqn+ZoUQLjz96nKxXIqr+Y9kk2bLcFcGTh57SXoUg/dUUGxkq
+NIeGndy4/C6s7FXwTMiqB0PD2F4F0Ut+4RCZU6P9sHnD8XXMUCPa01DXRNar
+0VCS0NpMtqhRsDD8sDSM9sUwqaNtZWQU4+78RFrcNtoXo+hEW0882VIMkT3x
+QQaZ0yBSKTuvJUODqJ92Cd5Y3WvwY1/gYHkc7TUY/ma7zyCivRaxGYOdZ8nQ
+okj6RWhuGu21yDc1CfLIFi3sY5+vySdzJZg+51j6k4wSVF+OP+1c9n+F3Iga
+
+      "]]}, 
+    {RGBColor[0.6, 0.24, 0.4428931686004542], PointSize[0.01], 
+     PointBox[CompressedData["
+1:eJw1yw9M1GUcx/EfnAIGZlIqlQ1kBAfBiQThIXgfTuAOgfP+oV1yRbgDEQXv
+CGqp9BsO/yHEEDNjzGTDhUVKYLEhSYInU+SGK4FyTo4IhHGCyAkXRjW+z297
+9tvreT+fdRl5aoMzx3G6/87//8VvUmKqcVoe3nNWQhcIWVHT4/deE9kNu5Zk
+z33l3U5+CV6j2pUPKszkV2BtWler4+6QvXBJbBi88WMveS02r4lKmxv/lewD
+2U4tf8S7n+yLcN7cEKz6g+yHeu9lOd/yD8j+8Ix2ixi895AsxG3pJbPXXis5
+CEW1xwrvLwyRg6H+wL7Po3KYLIItMtR+zHeEHIq/+jo+DWscJW/AmNbz5KOY
+MXIYqjtvDZZ3jZPfxmzLh3qBaoIcjnJjiYewz0aOwITs5qq8kEnyOxgvt58S
+2Jgj8eXvcpW0YYq8EWeSAsVrc56QxYiT+muKA6bJUSiu9O40WJk3oS/LZPmp
++ik5GlO/+PZna2bIMdCZnDP2LbOTN+Pu4d88m9uYJTj+NL9p/f5nZGDDd6Oh
+d31mF80DyWfKasosZC4Web1+YdqDc9RjsbrLpvAKcFCXIgttB7stZF4KS6Ag
+d1fh39S3oEI4uGB5bZ76Fuy9Ltq0tI3MxUH0Kp9qT3tOPQ5Tbwh/+MJB5uLh
+Fhg5NHD6H+rxUFoLLjaJFqgnQJGZ5lhzg8wnQHyr+MChYA6LXYbvxZ8fEBaQ
+eRne6t4tPXqVdTkaJDvWVzk7UZejJT3haqKMzCWitTSiqPYE64kYdq9782w3
+61vRoXD6TLjcmfpWhP7pnp+UTOaSkCaVuj4/znoSLPHS9zeaWU+G3hDcMssJ
+qCfjcKUgXxxF5lJg+PkFd7uR9RREz3u/HvQN6woMiVfpe++zrkDpUZeLIyuW
+UN+GkZEGx+5YMr8N8+ebs1RG1pVIf9E5qOYcGUpUDbhWy7vZeyUOXXGPUD4j
+tysR8lHuqcs+S2mvQuaRSVOmnAwVdP3Tjbm5ZF6F866tSnMluV2FyIk6454r
+bK/GUGGO7t17bK+G/rYyr2yG7dWYbtbHuL7sQns1TIry/R0iMqdBrs1p4Jqc
+DA12pATscaSTeQ2+tg5HGT9mew3GCjpLfE+yvRZ+gx71HufYXosL3IS/6DLb
+a/Gwp6qu5Brba7G6XvV45R22T0VY64Unvf1sn4rsiozrnVa2T8UnNxtPPxpj
++1SUjoq6JFNsvx2jOx8PmGfYfjvc+LK8olkX/AtuY4UR
+      "]]}}, {}},
+>>>>>>> 90f5a3ab8afb386f1992fddf9561f36a8ee4a4a1
   AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
-  Axes->{True, True},
+  Axes->True,
   AxesLabel->{
     FormBox["\"n\"", TraditionalForm], 
     FormBox[
     "\"\\!\\(\\*SubscriptBox[\\(\[Omega]\\), \\(n\\)]\\)\"", TraditionalForm]},
   AxesOrigin->{0, 0},
-  DisplayFunction->Identity,
-  Frame->{{False, False}, {False, False}},
-  FrameLabel->{{None, None}, {None, None}},
-  FrameTicks->{{Automatic, Automatic}, {Automatic, Automatic}},
-  GridLines->{None, None},
-  GridLinesStyle->Directive[
-    GrayLevel[0.5, 0.4]],
   Method->{},
+<<<<<<< HEAD
   PlotLabel->FormBox["\"Eigenmodes of the Fibonacci chain\"", TraditionalForm],
   PlotRange->{{0., 233.}, {0, 3.4640232315796413`}},
+=======
+  PlotLabel->FormBox[
+   "\"Eigenfrequencies of the Fibonacci chain\"", TraditionalForm],
+  PlotRange->{{0, 89.}, {0, 4.308474006697094}},
+>>>>>>> 90f5a3ab8afb386f1992fddf9561f36a8ee4a4a1
   PlotRangeClipping->True,
-  PlotRangePadding->{{
-     Scaled[0.02], 
-     Scaled[0.02]}, {
-     Scaled[0.02], 
-     Scaled[0.05]}},
-  Ticks->{Automatic, Automatic}]], "Output",
+  PlotRangePadding->{{1.78, 1.78}, {0.08616948013394188, 
+   0.08616948013394188}}]], "Output",
  CellChangeTimes->{{3.625995216500298*^9, 3.6259952408136797`*^9}, {
    3.625995377680015*^9, 3.62599541326827*^9}, {3.625999603561874*^9, 
    3.625999659705276*^9}, 3.6259996903469257`*^9, 3.625999784769264*^9, {
    3.62599989854655*^9, 3.625999938556897*^9}, 3.625999985462491*^9, {
    3.627636229648204*^9, 3.6276363219826717`*^9}, 3.6276363718382874`*^9, {
    3.6276364357272453`*^9, 3.627636456551043*^9}, {3.627636535400865*^9, 
+<<<<<<< HEAD
    3.6276365750643053`*^9}, {3.642764329122396*^9, 3.642764338878373*^9}, {
    3.642764456940184*^9, 3.642764469718458*^9}, {3.642764543104582*^9, 
    3.642764548382037*^9}, 3.642764605765174*^9, {3.6427646766810503`*^9, 
    3.642764684564971*^9}, {3.642764829538042*^9, 3.642764853215641*^9}, 
    3.642764890208276*^9}],
+=======
+   3.6276365750643053`*^9}, 3.6276649024924383`*^9, 3.6276650090048103`*^9}],
+>>>>>>> 90f5a3ab8afb386f1992fddf9561f36a8ee4a4a1
 
-Cell[BoxData["\<\"/home/nicolas/git/dynamics_classical_qp_chain/data/\
-eigenmodes.pdf\"\>"], "Output",
+Cell[BoxData["\<\"/home/nicolas/git/classical-quasicrystals/data/eigenmodes.\
+pdf\"\>"], "Output",
  CellChangeTimes->{{3.625995216500298*^9, 3.6259952408136797`*^9}, {
    3.625995377680015*^9, 3.62599541326827*^9}, {3.625999603561874*^9, 
    3.625999659705276*^9}, 3.6259996903469257`*^9, 3.625999784769264*^9, {
    3.62599989854655*^9, 3.625999938556897*^9}, 3.625999985462491*^9, {
    3.627636229648204*^9, 3.6276363219826717`*^9}, 3.6276363718382874`*^9, {
    3.6276364357272453`*^9, 3.627636456551043*^9}, {3.627636535400865*^9, 
+<<<<<<< HEAD
    3.6276365750643053`*^9}, {3.642764329122396*^9, 3.642764338878373*^9}, {
    3.642764456940184*^9, 3.642764469718458*^9}, {3.642764543104582*^9, 
    3.642764548382037*^9}, 3.642764605765174*^9, {3.6427646766810503`*^9, 
@@ -331,6 +478,9 @@ Cell[BoxData[
 Cell[BoxData["3.428349698954142`"], "Output",
  CellChangeTimes->{{3.642764875360022*^9, 3.642764892879992*^9}, 
    3.6427649628904743`*^9}]
+=======
+   3.6276365750643053`*^9}, 3.6276649024924383`*^9, 3.6276650091050053`*^9}]
+>>>>>>> 90f5a3ab8afb386f1992fddf9561f36a8ee4a4a1
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -437,8 +587,9 @@ Cell[BoxData[
      RowBox[{"AxesLabel", "\[Rule]", 
       RowBox[{"{", 
        RowBox[{
-       "\"\<n\>\"", ",", "\"\<\!\(\*SubscriptBox[\(T\), \(n\)]\)\>\""}], 
-       "}"}]}], ",", 
+       "\"\<n\>\"", ",", 
+        "\"\<\!\(\*SubscriptBox[SuperscriptBox[\(T\), \(hd\)], \
+\(n\)]\)\>\""}], "}"}]}], ",", 
      RowBox[{
      "PlotLabel", "\[Rule]", 
       "\"\<Eigenvalues of the kinetic part \\n of the Hamiltonian: \
@@ -450,12 +601,13 @@ self-similarity.\>\""}]}], "]"}], "\[IndentingNewLine]",
  CellChangeTimes->{{3.627636739071419*^9, 3.627636833690198*^9}, {
   3.6276368771076*^9, 3.627636878020563*^9}, {3.627636916979822*^9, 
   3.6276370476826363`*^9}, {3.627637082149194*^9, 3.627637096820983*^9}, {
-  3.627637146524787*^9, 3.627637146692733*^9}}],
+  3.627637146524787*^9, 3.627637146692733*^9}, {3.627665020948909*^9, 
+  3.627665023054412*^9}}],
 
 Cell[BoxData[
  GraphicsBox[{{}, 
-   {RGBColor[0.368417, 0.506779, 0.709798], PointSize[0.01388888888888889], 
-    Thickness[0.003], LineBox[CompressedData["
+   {RGBColor[0.24720000000000014`, 0.24, 0.6], Thickness[0.003], 
+    LineBox[CompressedData["
 1:eJw1lwtQlWUaxw8UIpDojAwJOAroKkGaImJchD/IXUQ43O+Hc+NcAKv1hhUe
 DW3B3Eyr1cxWvNZqpeAmlMbJNmcbZ73tiBSC4BUTGzXXSY1tXZ//ywzD/HjO
 //zO+b7vfd/nCdIv0ppcNRrNjce///8rP7fj0/9lcUGVp5P/wPH7AV1NOsUj
@@ -501,47 +653,43 @@ E/01aJP5iv4aJMn8RX8Nrsl8Rn8NNsr8Rv9jlvmO/hoEyPxHfw3ek/mQ/hq0
 yPxIfy2OyXxJfy2SZf7E/wAjqjn2
      "]]}, {}},
   AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
-  Axes->{True, True},
+  Axes->True,
   AxesLabel->{
     FormBox["\"n\"", TraditionalForm], 
     FormBox[
-    "\"\\!\\(\\*SubscriptBox[\\(T\\), \\(n\\)]\\)\"", TraditionalForm]},
-  AxesOrigin->{0, 0},
-  DisplayFunction->Identity,
-  Frame->{{False, False}, {False, False}},
-  FrameLabel->{{None, None}, {None, None}},
-  FrameTicks->{{Automatic, Automatic}, {Automatic, Automatic}},
-  GridLines->{None, None},
-  GridLinesStyle->Directive[
-    GrayLevel[0.5, 0.4]],
+    "\"\\!\\(\\*SubscriptBox[SuperscriptBox[\\(T\\), \\(hd\\)], \
+\\(n\\)]\\)\"", TraditionalForm]},
+  AxesOrigin->{0, 0.},
   Method->{},
   PlotLabel->FormBox[
    "\"Eigenvalues of the kinetic part \\n of the Hamiltonian: \
 self-similarity.\"", TraditionalForm],
-  PlotRange->{{0., 233.}, {-3.297485362063217, 3.2974853620632154`}},
+  PlotRange->{{0, 233.}, {-3.297485362063217, 3.2974853620632154`}},
   PlotRangeClipping->True,
-  PlotRangePadding->{{
-     Scaled[0.02], 
-     Scaled[0.02]}, {
-     Scaled[0.05], 
-     Scaled[0.05]}},
-  Ticks->{Automatic, Automatic}]], "Output",
+  PlotRangePadding->{{4.66, 4.66}, {0.13189941448252865`, 
+   0.13189941448252865`}}]], "Output",
  CellChangeTimes->{{3.627636772255084*^9, 3.627636834122182*^9}, {
    3.627636927491984*^9, 3.627636933613858*^9}, {3.6276369794744787`*^9, 
    3.627637048560357*^9}, {3.627637089686977*^9, 3.627637097515329*^9}, 
-   3.627637147231167*^9}],
+   3.627637147231167*^9, 3.627665023555043*^9}],
 
-Cell[BoxData["\<\"/home/nicolas/git/dynamics_classical_qp_chain/data/kinetic_\
-self_similar.pdf\"\>"], "Output",
+Cell[BoxData["\<\"/home/nicolas/git/classical-quasicrystals/data/kinetic_self_\
+similar.pdf\"\>"], "Output",
  CellChangeTimes->{{3.627636772255084*^9, 3.627636834122182*^9}, {
    3.627636927491984*^9, 3.627636933613858*^9}, {3.6276369794744787`*^9, 
    3.627637048560357*^9}, {3.627637089686977*^9, 3.627637097515329*^9}, 
-   3.627637147392252*^9}]
+   3.627637147231167*^9, 3.627665023761784*^9}]
 }, Open  ]]
 },
+<<<<<<< HEAD
 WindowSize->{1280, 965},
 WindowMargins->{{0, Automatic}, {Automatic, 0}},
 FrontEndVersion->"10.1 for Linux x86 (64-bit) (March 23, 2015)",
+=======
+WindowSize->{1920, 1028},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+FrontEndVersion->"9.0 for Linux x86 (64-bit) (February 7, 2013)",
+>>>>>>> 90f5a3ab8afb386f1992fddf9561f36a8ee4a4a1
 StyleDefinitions->"Default.nb"
 ]
 (* End of Notebook Content *)
@@ -556,6 +704,7 @@ CellTagsIndex->{}
 (*NotebookFileOutline
 Notebook[{
 Cell[558, 20, 174, 4, 32, "Input"],
+<<<<<<< HEAD
 Cell[735, 26, 597, 16, 88, "Input"],
 Cell[1335, 44, 4297, 110, 363, "Input"],
 Cell[5635, 156, 413, 9, 32, "Input"],
@@ -576,6 +725,20 @@ Cell[CellGroupData[{
 Cell[14130, 337, 4066, 115, 407, "Input"],
 Cell[18199, 454, 3900, 77, 278, "Output"],
 Cell[22102, 533, 352, 5, 32, "Output"]
+=======
+Cell[735, 26, 597, 16, 73, "Input"],
+Cell[1335, 44, 5945, 166, 495, "Input"],
+Cell[7283, 212, 663, 16, 55, "Input"],
+Cell[CellGroupData[{
+Cell[7971, 232, 1172, 27, 55, "Input"],
+Cell[9146, 261, 3779, 70, 274, "Output"],
+Cell[12928, 333, 610, 8, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[13575, 346, 4142, 117, 388, "Input"],
+Cell[17720, 465, 3598, 67, 281, "Output"],
+Cell[21321, 534, 370, 5, 88, "Output"]
+>>>>>>> 90f5a3ab8afb386f1992fddf9561f36a8ee4a4a1
 }, Open  ]]
 }
 ]
