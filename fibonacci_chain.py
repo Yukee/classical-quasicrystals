@@ -7,10 +7,15 @@ Created on Mon Nov 17 16:38:59 2014
 At short times the Fibonacci spring chain behaves as a periodic spin chain,
 whose spings have a stiffness equal to the harmonic mean of the Fibonacci sprins stiffness.
 TODO: behaviour at large times? Is there energy transfer to the higher modes in the Fibonacci case?
+
+Here we evolve the solution in time using the leapfrog integration method. 
+This method is stable for an oscillatory motion, as long as dt < 2/nu, where nu is any eigenfrequency of the system.
 """
 
 import math
 import matplotlib.pyplot as plt
+import numpy as np
+from scipy.stats import hmean
 
 #compute Fibonacci numbers
 def fib(n):
@@ -21,38 +26,55 @@ def fib(n):
 
 # total time of the simulation
 Ntime = 6000
-n = 11
+n = 13
 # length of the spring chain
 L = fib(n)-1
-# stength of the anharmonicity
-alpha = 0.8
-# timestep
-dt = 0.02
-# strenght of the quasiperiodic addition to the stiffness
-delta = 5.
+# Fibonacci numbers (used to generate the sequence of couplings)
+p = fib(n-2)
+q = fib(n-1)
+# quasiperiodic spring stiffness
+ks = 6.
+kw = 1.
+# return kw or ks according to the Fibonacci sequence
+def k(i):
+    if np.remainder(p*i,p+q) >= p:
+        ktemp = kw
+    else: ktemp = ks
+    return ktemp    
+# compute the sequence of couplings on the Fib chain
+kf = [k(i+1) for i in range(L+1)]
 # harmonic mean stiffness
-meank = (1.+delta)/(1.+delta*fib(n-2)/fib(n))
-# geometric mean stiffness
-meankg = 1. + delta*fib(n-1)/fib(n)
+meank = hmean(kf) #should be equal to (p+q)/(p/ks+q/kw)
+
+"""
+if ks >= kw, then we have for the eigenmodes:
+omega_max <= omega^p_max,
+where omega^p_max is the max eigenmode of the periodic chain where ks = kw.
+We have omega^p_max = 2 \sqrt{ts}.
+Since the leapfrog scheme is stable if dt < 2/omega_max, it is enougth to take
+dt = 1/\sqrt{ts}
+"""
+# timestep
+dt = 0.9/math.sqrt(ks)
 
 # force from harmonic potential
-def HARMONIC(u,n):
-    return meank*(u[n+1]+u[n-1]-2.*u[n])
-
-# force from anharmonic (Fermi Pasta Ulam) potential 
-def FPU(u,n):
-    return u[n+1]+u[n-1]-2.*u[n]+alpha*((u[n+1]-u[n])**2-(u[n]-u[n-1])**2)
-
-# inverse golden ratio
-om = 2./(1.+math.sqrt(5))
+def HARMONIC(u,i):
+    return meank*(u[i+1]+u[i-1]-2.*u[i])
 
 # force from harmonic potential with Fibonacci stiffness
-def FIBO(u,n):
-    fibn = int(om*(n+1)) - int(om*n) # an integer to takes values 0 or 1 occordingly to Fibonacci sequence
-    fibnm = int(om*n) - int(om*(n-1))
-    cn = 1.+delta*fibn
-    cnm = 1.+delta*fibnm
-    return cn*u[n+1]+cnm*u[n-1]-(cn+cnm)*u[n]
+def FIBO(u,i):
+    return k(i+1)*u[i+1]+k(i)*u[i-1]-(k(i)+k(i+1))*u[i]
+
+# Fibonacci potential between sites n and n-1
+def pot_fib(u,i):
+    return 0.5*k(i)*(u[i]-u[i-1])**2
+    
+# compute the total energy in the harmonic chain
+def en_harmo(u,v):
+    return sum([0.5*v[0]**2+0.5*meank*u[0]**2]+[0.5*v[n]**2 + 0.5*meank*(u[n]-u[n-1])**2 for n in range(1,L)]+[0.5*v[L]**2+0.5*meank*(u[L]-u[L-1])**2+0.5*meank*u[L]**2])
+
+def en_fibo(u,v):
+    return sum([0]+[0.5*v[n]**2 + pot_fib(u,n) for n in range(1,L)]+[pot_fib(u,L)])
 
 # Fourier transform of a function e, on the chain of size L
 def FT(e,k):
@@ -60,11 +82,13 @@ def FT(e,k):
     
 #initial condition for the position u and velocity v
 u = [0]+[math.sin(i*math.pi/L)for i in range(1,L)]+[0]
-#u=[0]+[1.-2./L*abs(L/2.-i) for i in range(1,L)]+[0]
-# x0 = L/4 +4
-# x1 = L+1 - x0
-# v0 = 0.02
 v = [0. for i in range(L+1)]
+# store energy as a function of time
+enf = [en_fibo(u,v)]
+# initial velocity for the control system
+vc = v[:]
+# we advance velocities from 1/2 time step to initiate the leapfrog integration
+v = [0]+[v[i]+0.5*dt*FIBO(u,i) for i in range(1,L)]+[0]
 
 # looking at the first Nmodes Fourier energy modes
 Nmodes = 5
@@ -72,23 +96,31 @@ modc = [[] for i in range(Nmodes)]
 mod = [[] for i in range(Nmodes)]
 
 # vector of displacement and velocity
+# /!\ velocity is avdanced by 1/2 time step
 ut = [u]
 vt = [v]
 # control system (harmonic potential)
+uc = u[:]
+vc = [0]+[vc[i]+0.5*dt*HARMONIC(u,i) for i in range(1,L)]+[0]
 utc = [u]
 vtc = [v]
-uc = u[:]
-vc = v[:]
+# store energy as a function of time
+enc = [en_harmo(uc,vc)]
 
 #dynamics with fixed boundary conditions: u[0] = u[L-1] = 0. Using Euler integrator
 for itime in range(Ntime):
     olduc = uc[:]
     oldvc = vc[:]
-    vc = [0]+[oldvc[i]+dt*HARMONIC(olduc,i) for i in range(1,L)]+[0]
-    uc = [0]+[olduc[i]+dt*vc[i] for i in range(1,L)]+[0]
+    # compute u at time t+1 for u at time t
+    uc = [0]+[olduc[i]+dt*oldvc[i] for i in range(1,L)]+[0]
+    # compute v at time t+1/2 from v at time t-1/2
+    vc = [0]+[oldvc[i]+dt*HARMONIC(uc,i) for i in range(1,L)]+[0]
+    # compute  v at time t+1 from v at time t+1/2
+    vsynchro = [0]+[vc[i]+0.5*dt*HARMONIC(uc,i) for i in range(1,L)]+[0]
         
     utc.append(uc)
-    vtc.append(vc)
+    vtc.append(vsynchro)
+    enc.append(en_harmo(uc,vsynchro))
     
     # first Nmodes Fourier modes, harmonic
 #    for k in range(Nmodes):
@@ -97,11 +129,14 @@ for itime in range(Ntime):
     
     oldu = u[:]
     oldv = v[:]
-    v = [0]+[oldv[i]+dt*FIBO(oldu,i) for i in range(1,L)]+[0]
-    u = [0]+[oldu[i]+dt*v[i] for i in range(1,L)]+[0]
+    u = [0]+[oldu[i]+dt*oldv[i] for i in range(1,L)]+[0]
+    v = [0]+[oldv[i]+dt*FIBO(u,i) for i in range(1,L)]+[0]
+    # compute  v at time t+1 from v at time t+1/2
+    vsynchro = [0]+[vc[i]+0.5*dt*HARMONIC(uc,i) for i in range(1,L)]+[0]
     
     ut.append(u)
-    vt.append(v)
+    vt.append(vsynchro)
+    enf.append(en_fibo(u,vsynchro))
     
     # first Nmodes Fourier modes, Fibonacci    
 #    for k in range(Nmodes):
@@ -130,6 +165,7 @@ def PLOT(timeit):
     plt.ylabel('displacement')
     plt.axis([0,L+1,-2.,2.])
     plt.plot(r,utc[timeit])
+    plt.plot(r,vtc[timeit])
     plt.show()
     
 def plot_c(timeit):
@@ -159,16 +195,6 @@ def record_control(timeit,skip):
     plt.plot(r,ut[skip*timeit])
     plt.plot(r,utc[skip*timeit])
     plt.savefig('data/fibo_harmo_'+str(timeit)+'.png')
-    # clear plot
-    plt.clf()
-
-def record_FPU(timeit):
-    plt.title('The FPU chain at time ' + str(round(dt*timeit,2)))
-    plt.xlabel('position')
-    plt.ylabel('displacement')
-    plt.axis([0,L+1,-2.,2.])
-    plt.plot(r,ut[timeit])
-    plt.savefig('data/FPU_realspace_'+str(int(timeit/3))+'.png')
     # clear plot
     plt.clf()
 
